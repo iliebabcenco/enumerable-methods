@@ -93,6 +93,80 @@ module Enumerable
     end
     return false
   end
+
+  # def my_none?(parameter = nil)
+  #   unless block_given? #we go if we dont have block {}
+  #     if parameter == nil #we dont have parameter
+  #       for i in self
+  #         if i == false || i == nil 
+  #           return true
+  #         end
+  #       end
+  #     elsif parameter.instance_of? Class #we have a Class like a parameter
+  #       for i in self
+  #         unless i.is_a? parameter
+  #           return true
+  #         end
+  #       end
+  #     else
+  #       for i in self
+  #         unless parameter.match?(i)
+  #           return true
+  #         end
+  #       end
+  #     end
+  #   else #we go if we have block {}
+  #     for i in self
+  #       if (yield i) == false || (yield i) == nil 
+  #         return true
+  #       end
+  #     end
+  #   end
+  #   return false
+  # end
+
+   def my_none?(parameter = nil)
+    unless block_given? #we go if we dont have block {}
+      if parameter == nil #we dont have parameter
+        for i in self
+         if i == true 
+           return false
+          end
+        end
+      elsif parameter.instance_of? Class #we have a Class like a parameter
+        for i in self
+          if i.is_a? parameter
+            return false
+          end
+        end
+      else
+        for i in self
+          if parameter.match?(i)
+            return false
+          end
+        end
+      end
+    else #we go if we have block {}
+      for i in self
+        if (yield i) == true  
+          return false
+        end
+      end
+    end
+    return true
+  end
+
+
+   
+
+p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
+p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
+p %w{ant bear cat}.my_none?(/d/)                        #=> true
+p [1, 3.14, 42].my_none?(Float)                         #=> false
+p [].my_none?                                           #=> true
+p [nil].my_none?                                        #=> true
+p [nil, false].my_none?                                 #=> true
+p [nil, false, true].my_none?                           #=> false
 end
 
  
