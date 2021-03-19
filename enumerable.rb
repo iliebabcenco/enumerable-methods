@@ -63,7 +63,7 @@ module Enumerable
     return true
   end
 
-   def my_any?(parameter = nil)
+  def my_any?(parameter = nil)
     unless block_given? #we go if we dont have block {}
       if parameter == nil #we dont have parameter
         for i in self
@@ -94,38 +94,7 @@ module Enumerable
     return false
   end
 
-  # def my_none?(parameter = nil)
-  #   unless block_given? #we go if we dont have block {}
-  #     if parameter == nil #we dont have parameter
-  #       for i in self
-  #         if i == false || i == nil 
-  #           return true
-  #         end
-  #       end
-  #     elsif parameter.instance_of? Class #we have a Class like a parameter
-  #       for i in self
-  #         unless i.is_a? parameter
-  #           return true
-  #         end
-  #       end
-  #     else
-  #       for i in self
-  #         unless parameter.match?(i)
-  #           return true
-  #         end
-  #       end
-  #     end
-  #   else #we go if we have block {}
-  #     for i in self
-  #       if (yield i) == false || (yield i) == nil 
-  #         return true
-  #       end
-  #     end
-  #   end
-  #   return false
-  # end
-
-   def my_none?(parameter = nil)
+  def my_none?(parameter = nil)
     unless block_given? #we go if we dont have block {}
       if parameter == nil #we dont have parameter
         for i in self
@@ -156,17 +125,48 @@ module Enumerable
     return true
   end
 
+# p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
+# p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
+# p %w{ant bear cat}.my_none?(/d/)                        #=> true
+# p [1, 3.14, 42].my_none?(Float)                         #=> false
+# p [].my_none?                                           #=> true
+# p [nil].my_none?                                        #=> true
+# p [nil, false].my_none?                                 #=> true
+# p [nil, false, true].my_none?                           #=> false
 
-   
+  def my_count(parameter = nil)
+    unless block_given?
+      if parameter == nil
+        return self.length
+      else
+        counter = 0
+        for i in self
+          if i == parameter
+            counter+=1
+          end
+        end
+        return counter
+      end
+    else
+      counter = 0
+      for i in self
+        if yield i
+          counter+=1
+        end
+      end
+      return counter
+    end
+  end
 
-p %w{ant bear cat}.my_none? { |word| word.length == 5 } #=> true
-p %w{ant bear cat}.my_none? { |word| word.length >= 4 } #=> false
-p %w{ant bear cat}.my_none?(/d/)                        #=> true
-p [1, 3.14, 42].my_none?(Float)                         #=> false
-p [].my_none?                                           #=> true
-p [nil].my_none?                                        #=> true
-p [nil, false].my_none?                                 #=> true
-p [nil, false, true].my_none?                           #=> false
+  # p ary = ["ant", "cat", "gagaga", "eeee", "cat"]
+  # p ary.my_count               #=> 5
+  # p ary.my_count("cat")            #=> 2
+  # p ary.my_count{ |x| x=="eeee" } #=> 1
+
+
+
+  
+
 end
 
  
