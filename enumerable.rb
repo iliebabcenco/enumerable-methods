@@ -163,9 +163,16 @@ module Enumerable
   # p ary.my_count("cat")            #=> 2
   # p ary.my_count{ |x| x=="eeee" } #=> 1
 
+  def my_map
+    return to_enum unless block_given?
+    
+  end
 
 
-  
+  ary = ["ant", "cat", "gagaga", "eeee", "cat"]
+
+  p ary.my_map
+
 
 end
 
