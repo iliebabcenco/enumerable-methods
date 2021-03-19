@@ -20,7 +20,17 @@ module Enumerable
     a1 = ["ilie", "henry", "dasdas0", "dasdsa"]
     a1.my_each_index { |element, index| p "This is our #{element} and its index = #{index}" }
 
-     
+    def my_select
+      array = []
+      for i in self
+        if yield i 
+          array.push(i)
+        end
+        end
+        array
+      end
+      puts a1.my_select {|each| each != "ilie"}
+
   end
 
  
