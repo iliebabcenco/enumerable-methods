@@ -165,14 +165,17 @@ module Enumerable
 
   def my_map
     return to_enum unless block_given?
-    
+    array = []
+    for i in self
+      if yield i
+        array.push(i) 
+      end
+    end
+    array
   end
-
-
   ary = ["ant", "cat", "gagaga", "eeee", "cat"]
-
   p ary.my_map
-
+  p ary.my_map {|x| x == "cat"}
 
 end
 
