@@ -174,8 +174,45 @@ module Enumerable
     array
   end
   ary = ["ant", "cat", "gagaga", "eeee", "cat"]
-  p ary.my_map
-  p ary.my_map {|x| x == "cat"}
+  # p ary.my_map
+  # p ary.my_map {|x| x == "cat"}
+
+
+  def my_inject(first_param = nil, second_param = nil)
+    result = 0
+    unless block_given?
+      if first_param != nil && second_param != nil && second_param.is_a?(Symbol)
+        self.to_a.my_each {|each| first_param = first_param.send(second_param, each)}
+        return first_param
+      elsif first_param != nil && first_param.is_a?(Symbol) && second_param == nil
+        self.to_a.my_each {|each| result = result.send(first_param, each)}
+      end
+    else
+      if first_param == nil && second_param == nil
+        for i in self
+          result = yield i, result
+        end
+      elsif first_param != nil && second_param == nil
+        for i in self
+          first_param = yield first_param, i 
+        end
+        return first_param
+      end
+    end
+    return result
+  end
+
+#rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+# Same using a block
+p (5..10).my_inject(1) { |product, n| product * n } #=> 151200
+# Same using a block and inject
+p (5..10).my_inject { |sum, n| sum + n }            #=> 45
+  # Sum some numbers
+p (5..10).my_inject(:*)                             #=> 45
+# Multiply some numbers
+p (5..10).my_inject(1, :+)                          #=> 151200 value.is_a?(Symbol)
+
 
 end
 
