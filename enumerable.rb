@@ -8,7 +8,7 @@ module Enumerable
     self
   end
 
-  def my_each_index
+  def my_each_with_index
     counter = 0
     while counter < length
       yield self[counter], counter
@@ -29,122 +29,52 @@ module Enumerable
 
   def my_all?(parameter = nil)
     if block_given?
-      i = 0
-      while i < length
-        return false if (yield self[i]) == false || (yield self[i]).nil?
-
-        i += 1
-      end
+      to_a.my_each { |each| return false if (yield each) == false || (yield each).nil? }
     elsif parameter.nil?
-      i = 0
-      while i < length
-        return false if self[i] == false || self[i].nil?
-
-        i += 1
-      end
+      to_a.my_each { |each| return false if each == false || each.nil? }
     elsif parameter.instance_of? Class
-      i = 0
-      while i < length
-        return false unless self[i].is_a? parameter
-
-        i += 1
-      end
+      to_a.my_each { |each| return false unless each.is_a? parameter }
     else
-      i = 0
-      while i < length
-        return false unless parameter.match?(self[i])
-
-        i += 1
-      end
+      to_a.my_each { |each| return false unless parameter.match?(each) }
     end
     true
   end
 
   def my_any?(parameter = nil)
     if block_given?
-      i = 0
-      while i < length
-        return true if (yield self[i]) != false || (yield self[i]) != nil
-
-        i += 1
-      end
+      to_a.my_each { |each| return true if (yield each) != false || (yield each) != nil }
     elsif parameter.nil?
-      i = 0
-      while i < length
-        return true if self[i] != false || !self[i].nil?
-
-        i += 1
-      end
+      to_a.my_each { |each| return true if each != false || !each.nil? }
     elsif parameter.instance_of? Class
-      i = 0
-      while i < length
-        return true if self[i].is_a? parameter
-
-        i += 1
-      end
+      to_a.my_each { |each| return true if each.is_a? parameter }
     else
-      i = 0
-      while i < length
-        return true if parameter.match?(self[i])
-
-        i += 1
-      end
+      to_a.my_each { |each| return true if parameter.match?(each) }
     end
     false
   end
 
   def my_none?(parameter = nil)
     if block_given?
-      i = 0
-      while i < length
-        return false if (yield self[i]) == true
-
-        i += 1
-      end
+      to_a.my_each { |each| return false if (yield each) == true }
     elsif parameter.nil?
-      i = 0
-      while i < length
-        return false if self[i] == true
-
-        i += 1
-      end
+      to_a.my_each { |each| return false if each == true }
     elsif parameter.instance_of? Class
-      i = 0
-      while i < length
-        return false unless self[i].is_a? parameter
-
-        i += 1
-      end
+      to_a.my_each { |each| return false unless each.is_a? parameter }
     else
-      i = 0
-      while i < length
-        return false if parameter.match?(self[i])
-
-        i += 1
-      end
+      to_a.my_each { |each| return false if parameter.match?(each) }
     end
     true
   end
 
-  def my_count(parameter = nil)
+  def my_count(parameter = nil, &block)
     if block_given?
-      counter = 0
-      i = 0
-      while i < length
-        counter += 1 if yield self[i]
-        i += 1
-      end
-      counter
+      counter = to_a.my_select(&block)
+      counter.length
     elsif parameter.nil?
-      length
+      to_a.length
     else
-      counter = 0
-      i = 0
-      while i < length
-        counter += 1 if self[i] == parameter
-        i += 1
-      end
-      counter
+      counter = to_a.my_select { |each| each == parameter }
+      counter.length
     end
   end
 
@@ -153,17 +83,9 @@ module Enumerable
 
     array = []
     if proc.nil?
-      i = 0
-      while i < to_a.length
-        array.push(yield to_a[i])
-        i += 1
-      end
+      to_a.my_each { |each| array.push(yield each) }
     else
-      i = 0
-      while i < to_a.length
-        array.push(proc.call(to_a[i]))
-        i += 1
-      end
+      to_a.my_each { |_each| array.push(proc.call(to_a[i])) }
     end
     array
   end
@@ -172,16 +94,16 @@ module Enumerable
     result = 0
     if block_given?
       if first_param.nil? && second_param.nil?
-        to_a.my_each { |each| result = result == 0 ? each : yield(result, each) }
+        to_a.my_each { |each| result = result.zero? ? each : yield(result, each) }
       elsif !first_param.nil? && second_param.nil?
-        to_a.my_each { |each| first_param = first_param == 0 ? each : yield(first_param, each) }
+        to_a.my_each { |each| first_param = first_param.zero? ? each : yield(first_param, each) }
         return first_param
       end
     elsif !first_param.nil? && !second_param.nil? && second_param.is_a?(Symbol)
       to_a.my_each { |each| first_param = first_param.send(second_param, each) }
       return first_param
     elsif !first_param.nil? && first_param.is_a?(Symbol) && second_param.nil?
-      to_a.my_each { |each| result = result == 0 ? each : result.send(first_param, each) }
+      to_a.my_each { |each| result = result.zero? ? each : result.send(first_param, each) }
     end
     result
   end
