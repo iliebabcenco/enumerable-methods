@@ -1,69 +1,66 @@
 module Enumerable
   def my_each
-    i = 0
-    while i < length
-      yield self[i]
-      i += 1
-    end
+    to_a.length.times { |i| yield self[i] }
     self
   end
 
   def my_each_with_index
-    counter = 0
-    while counter < length
-      yield self[counter], counter
-      counter += 1
-    end
+    to_a.my_each { |each| yield each, index(each) }
     self
   end
 
   def my_select
     array = []
-    i = 0
-    while i < length
-      array.push(self[i]) if yield self[i]
-      i += 1
-    end
+    to_a.my_each { |each| array.push(each) if yield each }
     array
   end
 
   def my_all?(parameter = nil)
-    if block_given?
-      to_a.my_each { |each| return false if (yield each) == false || (yield each).nil? }
-    elsif parameter.nil?
-      to_a.my_each { |each| return false if each == false || each.nil? }
-    elsif parameter.instance_of? Class
-      to_a.my_each { |each| return false unless each.is_a? parameter }
-    else
-      to_a.my_each { |each| return false unless parameter.match?(each) }
+    to_a.my_each do |each|
+      if block_given?
+        return false unless yield each
+      elsif parameter.instance_of? Class
+        return false unless each.is_a? parameter
+      else
+        return false unless each
+        return false unless parameter === each
+      end
     end
     true
   end
 
   def my_any?(parameter = nil)
-    if block_given?
-      to_a.my_each { |each| return true if (yield each) != false || (yield each) != nil }
-    elsif parameter.nil?
-      to_a.my_each { |each| return true if each != false || !each.nil? }
-    elsif parameter.instance_of? Class
-      to_a.my_each { |each| return true if each.is_a? parameter }
-    else
-      to_a.my_each { |each| return true if parameter.match?(each) }
+    to_a.my_each do |each|
+      if block_given?
+        return true if yield each
+      elsif parameter.instance_of? Class
+        return true if each.is_a? parameter
+      else
+        return true if each == true
+        return true if parameter === each
+      end
     end
     false
   end
 
   def my_none?(parameter = nil)
-    if block_given?
-      to_a.my_each { |each| return false if (yield each) == true }
-    elsif parameter.nil?
-      to_a.my_each { |each| return false if each == true }
-    elsif parameter.instance_of? Class
-      to_a.my_each { |each| return false unless each.is_a? parameter }
-    else
-      to_a.my_each { |each| return false if parameter.match?(each) }
+    to_a.my_each do |each|
+      if block_given?
+        return false if yield each
+      elsif parameter.instance_of? Class
+        return false unless each.is_a? parameter
+      else
+        return false if each == true
+        return false if none_nil?(parameter, each)
+      end
     end
     true
+  end
+
+  def none_nil?(parameter = nil, each = nil)
+    return true if !parameter.nil? && parameter === each
+
+    false
   end
 
   def my_count(parameter = nil, &block)
@@ -91,21 +88,25 @@ module Enumerable
   end
 
   def my_inject(first_param = nil, second_param = nil)
-    result = 0
+    result = nil
     if block_given?
-      if first_param.nil? && second_param.nil?
-        to_a.my_each { |each| result = result.zero? ? each : yield(result, each) }
-      elsif !first_param.nil? && second_param.nil?
-        to_a.my_each { |each| first_param = first_param.zero? ? each : yield(first_param, each) }
+      if first_param.nil?
+        to_a.my_each { |each| result = result.nil? ? each : yield(result, each) }
+      else
+        to_a.my_each { |each| first_param = yield(first_param, each) }
         return first_param
       end
-    elsif !first_param.nil? && !second_param.nil? && second_param.is_a?(Symbol)
+    elsif symbol?(first_param)
+      to_a.my_each { |each| result = result.nil? ? each : result.send(first_param, each) }
+    else
       to_a.my_each { |each| first_param = first_param.send(second_param, each) }
       return first_param
-    elsif !first_param.nil? && first_param.is_a?(Symbol) && second_param.nil?
-      to_a.my_each { |each| result = result.zero? ? each : result.send(first_param, each) }
     end
     result
+  end
+
+  def symbol?(param1 = nil)
+    !param1.nil? && (param1.is_a? Symbol)
   end
 end
 
