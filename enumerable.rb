@@ -1,8 +1,17 @@
 module Enumerable
   def my_each
-    to_a.length.times { |i| yield self[i] }
+    return to_enum unless block_given?
+    to_a.length.times { |i| yield to_a[i]}
     self
   end
+ 
+# p (1..3).my_each{ |x| puts x}
+#  shoes = {
+#   "summer" => "sandals",
+#   "winter" => "boots"
+# }
+# p shoes.my_each{|z| puts z}
+
 
   def my_each_with_index
     to_a.my_each { |each| yield each, index(each) }
