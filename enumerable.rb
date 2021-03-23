@@ -34,17 +34,19 @@ array_clone = array.clone
 
   def my_all?(parameter = nil)
     to_a.my_each do |each|
+
       if block_given?
         return false unless yield each
       elsif parameter.instance_of? Class
         return false unless each.is_a? parameter
-      else
+      else 
         return false unless each
-        return false unless parameter === each
+       # return false unless parameter === each
       end
     end
     true
   end
+  p  numbers.my_all?
 
   def my_any?(parameter = nil)
     to_a.my_each do |each|
