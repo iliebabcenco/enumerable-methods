@@ -65,7 +65,7 @@ module Enumerable
   end
 
   def none_nil?(parameter = nil, each = nil)
-    return true if !parameter.nil? && parameter === each
+    return true if !parameter.nil? && each.match(parameter)
   end
 
   def my_count(parameter = nil, &block)
