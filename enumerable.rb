@@ -11,14 +11,13 @@ hash = { a: 1, b: 2, c: 3, d: 4, e: 5 }
 numbers = [1, 2i, 3.14]
 array_clone = array.clone
   def my_each
-    return to_enum unless block_given?
+    return to_enum(:my_each) unless block_given?
     to_a.length.times { |i| yield to_a[i]}
     self
   end
-
+  
   def my_each_with_index
-    
-    return to_enum unless block_given?
+    return to_enum(:my_each_with_index) unless block_given?
     index = 0
     to_a.my_each do |each| (yield each, index)
       index += 1
@@ -27,6 +26,7 @@ array_clone = array.clone
   end
 
   def my_select
+    return to_enum(:my_select) unless block_given?
     array = []
     to_a.my_each { |each| array.push(each) if yield each }
     array
