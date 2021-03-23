@@ -1,20 +1,28 @@
 module Enumerable
+  ARRAY_SIZE = 100
+LOWEST_VALUE = 0
+HIGHEST_VALUE = 9
+
+array =  Array.new(ARRAY_SIZE) { rand(LOWEST_VALUE...HIGHEST_VALUE) }
+block = proc { |num| num < (LOWEST_VALUE + HIGHEST_VALUE) / 2 } 
+words = %w[dog door rod blade]
+range = Range.new(5, 50)
+hash = { a: 1, b: 2, c: 3, d: 4, e: 5 } 
+numbers = [1, 2i, 3.14]
+array_clone = array.clone
   def my_each
     return to_enum unless block_given?
     to_a.length.times { |i| yield to_a[i]}
     self
   end
- 
-# p (1..3).my_each{ |x| puts x}
-#  shoes = {
-#   "summer" => "sandals",
-#   "winter" => "boots"
-# }
-# p shoes.my_each{|z| puts z}
-
 
   def my_each_with_index
-    to_a.my_each { |each| yield each, index(each) }
+    
+    return to_enum unless block_given?
+    index = 0
+    to_a.my_each do |each| (yield each, index)
+      index += 1
+    end
     self
   end
 
