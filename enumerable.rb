@@ -100,11 +100,11 @@ array_clone = array.clone
     if proc.nil?
       to_a.my_each { |each| array.push(yield each) }
     else
-      to_a.my_each { |_each| array.push(proc.call(to_a[i])) }
+      to_a.my_each { |each| array.push(proc.call(each)) }
     end
     array
   end
-
+ 
   def my_inject(first_param = nil, second_param = nil)
     result = nil
     if block_given?
