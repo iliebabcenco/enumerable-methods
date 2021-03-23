@@ -53,9 +53,7 @@ array_clone = array.clone
       elsif parameter.instance_of? Class
         return true if each.is_a? parameter
       else
-        # return true if each == true
-        # return true if none_nil?(parameter, each)
-        return result = result.nil? ? (!!each) : result.none_nil?(parameter, each)
+        return true if result = parameter.nil? ? (!!each) : none_nil?(parameter, each)
       end
     end
     false
@@ -77,17 +75,12 @@ array_clone = array.clone
   end
 
   def none_nil?(parameter = nil, each = nil)
+    
     return true if !parameter.nil? && parameter === each
 
     false
   end
-p array.my_any? #true
-p %w[ant bear cat].my_any? { |word| word.length >= 3 } #=> true
-p %w[ant bear cat].my_any? { |word| word.length >= 4 } #=> true
-p %w[ant bear cat].my_any?(/d/)                        #=> false
-p [nil, true, 99].my_any?(Integer)                     #=> true
-p [nil, true, 99].my_any?                              #=> true
-p [].my_any?                                           #=> false
+
   def my_count(parameter = nil, &block)
     if block_given?
       counter = to_a.my_select(&block)
