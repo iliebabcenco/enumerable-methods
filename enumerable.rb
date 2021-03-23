@@ -106,6 +106,7 @@ array_clone = array.clone
   end
  
   def my_inject(first_param = nil, second_param = nil)
+    raise LocalJumpError.new "It's a LocalJumpError" unless block_given? && first_param != nil && second_param != nil
     result = nil
     if block_given?
       if first_param.nil?
@@ -126,8 +127,11 @@ array_clone = array.clone
   def symbol?(param1 = nil)
     !param1.nil? && (param1.is_a? Symbol)
   end
+  p array.my_inject
 end
+
 
 def multiply_els(array)
   array.my_inject(:*)
 end
+
