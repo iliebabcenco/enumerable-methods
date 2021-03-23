@@ -8,7 +8,7 @@ block = proc { |num| num < (LOWEST_VALUE + HIGHEST_VALUE) / 2 }
 words = %w[dog door rod blade]
 range = Range.new(5, 50)
 hash = { a: 1, b: 2, c: 3, d: 4, e: 5 } 
-numbers = [1, 2i, 3.14]
+numbers = [1, 5, 3.14]
 array_clone = array.clone
   def my_each
     return to_enum(:my_each) unless block_given?
@@ -41,12 +41,11 @@ array_clone = array.clone
         return false unless each.is_a? parameter
       else 
         return false unless each
-       # return false unless parameter === each
+        return false if none_nil?(parameter, each)
       end
     end
     true
   end
-  p  numbers.my_all?
 
   def my_any?(parameter = nil)
     to_a.my_each do |each|
