@@ -32,7 +32,7 @@ module Enumerable
       elsif parameter.instance_of? Class
         return false unless each.is_a? parameter
       else
-        return false unless parameter.nil? ? !each.nil? : none_nil?(parameter, each)
+        return false unless parameter.nil? ? each : none_nil?(parameter, each)
       end
     end
     true
