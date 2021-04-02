@@ -163,6 +163,42 @@ describe 'Enumerable' do
     end
   end
 
+  describe '#my_inject' do
+    it 'return true if conditios is true far each element' do
+      expect((5..10).my_inject(:+)).to be 45
+    end
+    it 'return true if conditios is true far each element' do
+      expect((5..10).my_inject(:*)).to be 151_200
+    end
+    it 'return true if at least on of conditios is false' do
+      expect((5..10).my_inject { |sum, n| sum + n }).to be 45
+    end
+    it 'return true if at least on of conditios is false' do
+      expect((5..10).my_inject { |sum, n| sum * n }).to be 151_200
+    end
+    it 'repeat the code from block with each element' do
+      expect((5..10).my_inject(1, :*)).to be 151_200
+    end
+    it 'repeat the code from block with each element' do
+      expect((5..10).my_inject(1, :+)).to be 46
+    end
+    it 'repeat the code from block with each element' do
+      expect((5..10).my_inject(1) { |product, n| product * n }).to be 151_200
+    end
+    it 'repeat the code from block with each element' do
+      expect(%w[cat sheep bear].my_inject do |memo, word|
+               memo.length > word.length ? memo : word
+             end).to eql('sheep')
+    end
+    it 'no block or arguments given' do
+      expect { (5..10).my_inject }.to raise_error LocalJumpError
+    end
+  end
   
-  
+end
+
+describe '#multiply_els' do
+  it 'return true if conditios is true far each element' do
+    expect(multiply_els([5, 6, 7, 8, 9, 10])).to be 151_200
+  end
 end
