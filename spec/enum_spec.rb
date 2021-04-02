@@ -127,11 +127,42 @@ describe 'Enumerable' do
     it 'return true if enum is empty' do
       expect([].my_none?).to be true
     end
-    it 'return true if at least one element from an enum is nil or false' do
+    it 'return true if all elements from an enum are nil or false' do
       expect([nil].my_none?).to be true
     end
     it 'return false if at least one element from an enum is true' do
       expect([nil, false, true].my_none?).to be false
     end
   end
+
+  describe '#my_count' do
+    ary = [1, 2, 4, 2]
+    it 'return the length of enum if no parameters or blocks' do
+      expect(ary.my_count).to eql(4)
+    end
+    it 'return a counter of elements which match with parameter' do
+      expect(ary.my_count(2)).to eql(2)
+    end
+    it 'return a counter of elements which match with parameter' do
+      expect(ary.my_count(&:even?)).to eql(3)
+    end
+  end
+
+  describe '#my_map' do
+    it 'return an Enumerator if no block or parameter' do
+      expect(ex.my_map).to be_a(Enumerator)
+    end
+    it 'return an Enumerator if parameter is nil' do
+      expect(ex.my_map(nil)).to be_a(Enumerator)
+    end
+    it 'return an array with the results of code from block' do
+      expect((1..4).my_map { |i| i * i }).to eql([1, 4, 9, 16])
+    end
+    it 'return an array with the results of code from block' do
+      expect((1..4).my_map { 'cat' }).to eql(%w[cat cat cat cat])
+    end
+  end
+
+  
+  
 end
