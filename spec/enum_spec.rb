@@ -92,7 +92,7 @@ describe 'Enumerable' do
       expect([nil, true, 99].my_any?(Integer)).to be true
     end
     it 'return true if no one element from an enum passes the condition from parameter' do
-      expect([nil, false, nil].my_any?(Integer)).to be false
+      expect([nil, "false", nil].my_any?(Integer)).to be false
     end
     it 'return true if at least one element from an enum is different to nil or false' do
       expect([nil, true, 99].my_any?).to be true
@@ -102,6 +102,36 @@ describe 'Enumerable' do
     end
     it 'repeat false if enum is empty' do
       expect([].my_any?).to be false
+    end
+  end
+
+  describe '#my_none?' do
+    it 'return true if none element from an enum passes the condition from block' do
+      expect(%w[ant bear cat].my_none? { |word| word.length == 5 }).to be true
+    end
+    it 'return false if at least one element from an enum passes the condition from block' do
+      expect(%w[ant bearr cat].my_none? { |word| word.length == 5 }).to be false
+    end
+    it 'return true if none element from an enum passes the condition from parameter' do
+      expect(%w[ant bear cat].my_none?(/d/)).to be true
+    end
+    it 'return false if at least one element from an enum passes the condition from parameter' do
+      expect(%w[ant bird cat].my_none?(/d/)).to be false
+    end
+    it 'return true if none element from an enum passes the condition from parameter' do
+      expect([1, 3, 42].my_none?(String)).to be true
+    end
+    it 'return false if at least one element from an enum passes the condition from parameter' do
+      expect([1, 3.14, 42].my_none?(Float)).to be false
+    end
+    it 'return true if enum is empty' do
+      expect([].my_none?).to be true
+    end
+    it 'return true if at least one element from an enum is nil or false' do
+      expect([nil].my_none?).to be true
+    end
+    it 'return false if at least one element from an enum is true' do
+      expect([nil, false, true].my_none?).to be false
     end
   end
 end

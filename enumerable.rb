@@ -14,7 +14,6 @@ module Enumerable
       (yield each, index)
       index += 1
     end
-    self
   end
 
   def my_select
@@ -56,7 +55,7 @@ module Enumerable
       if block_given?
         return false if yield each
       elsif parameter.instance_of? Class
-        return false unless each.is_a? parameter
+        return false if each.is_a? parameter
       elsif parameter.nil? ? each == true : none_nil?(parameter, each)
         return false
       end
