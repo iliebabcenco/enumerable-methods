@@ -63,10 +63,6 @@ module Enumerable
     true
   end
 
-  def none_nil?(parameter = nil, each = nil)
-    return true if !parameter.nil? && parameter === each
-  end
-
   def my_count(parameter = nil, &block)
     if block_given?
       counter = to_a.my_select(&block)
@@ -107,6 +103,12 @@ module Enumerable
       raise LocalJumpError, 'no block or arguments given'
     end
     result
+  end
+
+  private
+
+  def none_nil?(parameter = nil, each = nil)
+    return true if !parameter.nil? && parameter === each
   end
 
   def symbol?(param1 = nil)

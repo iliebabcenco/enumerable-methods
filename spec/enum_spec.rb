@@ -92,7 +92,7 @@ describe 'Enumerable' do
       expect([nil, true, 99].my_any?(Integer)).to be true
     end
     it 'return true if no one element from an enum passes the condition from parameter' do
-      expect([nil, "false", nil].my_any?(Integer)).to be false
+      expect([nil, 'false', nil].my_any?(Integer)).to be false
     end
     it 'return true if at least one element from an enum is different to nil or false' do
       expect([nil, true, 99].my_any?).to be true
@@ -194,7 +194,6 @@ describe 'Enumerable' do
       expect { (5..10).my_inject }.to raise_error LocalJumpError
     end
   end
-  
 end
 
 describe '#multiply_els' do
