@@ -44,4 +44,34 @@ describe 'Enumerable' do
       expect(%i[foo bar].my_select { |x| x == :foo }).to eql([:foo])
     end
   end
+
+  describe '#my_all?' do
+    it 'return true if each element from an enum passes the condition from block' do
+      expect(%w[ant bear cat].my_all? { |word| word.length >= 3 }).to be true
+    end
+    it 'return false if at least one element from an enum does not pass the condition from block' do
+      expect(%w[ant bear cat].my_all? { |word| word.length >= 4 }).to be false
+    end
+    it 'return false if at least one element from an enum does not pass the condition from parameter' do
+      expect(%w[ant bear cat].my_all?(/t/)).to be false
+    end
+    it 'return true if each element from an enum passes the condition from parameter' do
+      expect(%w[ant pet cat].my_all?(/t/)).to be true
+    end
+    it 'return false if at least one element from an enum does not pass the condition from parameter' do
+      expect([1, '2i', 3.14].my_all?(Numeric)).to be false
+    end
+    it 'return true if each element from an enum passes the condition from parameter' do
+      expect([1, 2i, 3.14].my_all?(Numeric)).to be true
+    end
+    it 'return false if at least one element from an enum is nil or false' do
+      expect([nil, true, 99].my_all?).to be false
+    end
+    it 'return true if all elements from an enums are different to nil and false' do
+      expect(['nil', true, 99].my_all?).to be true
+    end
+    it 'return true if no an enum is empty' do
+      expect([].my_all?(Numeric)).to be true
+    end
+  end
 end
