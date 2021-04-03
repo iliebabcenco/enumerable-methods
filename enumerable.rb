@@ -14,7 +14,6 @@ module Enumerable
       (yield each, index)
       index += 1
     end
-    self
   end
 
   def my_select
@@ -56,16 +55,12 @@ module Enumerable
       if block_given?
         return false if yield each
       elsif parameter.instance_of? Class
-        return false unless each.is_a? parameter
+        return false if each.is_a? parameter
       elsif parameter.nil? ? each == true : none_nil?(parameter, each)
         return false
       end
     end
     true
-  end
-
-  def none_nil?(parameter = nil, each = nil)
-    return true if !parameter.nil? && parameter === each
   end
 
   def my_count(parameter = nil, &block)
@@ -108,6 +103,12 @@ module Enumerable
       raise LocalJumpError, 'no block or arguments given'
     end
     result
+  end
+
+  private
+
+  def none_nil?(parameter = nil, each = nil)
+    return true if !parameter.nil? && parameter === each
   end
 
   def symbol?(param1 = nil)
