@@ -23,6 +23,12 @@ In this project we implemented Ruby's Enumerable methods.
 
 - Ruby
 
+## Tested with Rspec
+
+In order to test the methods run the command in terminal:
+
+`rspec`
+
 ## Authors
 
 👤 **Ilie Babcenco**
